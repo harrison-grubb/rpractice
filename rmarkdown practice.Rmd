@@ -1,0 +1,79 @@
+---
+title: "R Markdown Practice"
+author: "Harrison Grubb"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r packages, include= FALSE}
+
+# reading in packages
+library(tidyverse)
+library(tidymodels)
+
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+```{r market data, include=FALSE}
+### Reading In Market Level Data
+for_sale <- read_csv('https://files.zillowstatic.com/research/public_v2/invt_fs/Metro_invt_fs_uc_sfr_raw_week.csv?t=1625694088') # single family inventory for sale weekly
+
+median_list_price <- read_csv('https://files.zillowstatic.com/research/public_v2/mlp/Metro_mlp_uc_sfr_raw_week.csv?t=1625694088') # single family median list price
+
+median_sale_price <- read_csv('https://files.zillowstatic.com/research/public_v2/median_sale_price/Metro_median_sale_price_uc_SFR_raw_week.csv?t=1625694088') # single family median sale price
+
+percent_price_cut <- read_csv('https://files.zillowstatic.com/research/public_v2/perc_listings_price_cut/Metro_perc_listings_price_cut_uc_sfr_smoothed_week.csv?t=1625694088') # percent of sales with price cut
+
+percent_cut <- read_csv('https://files.zillowstatic.com/research/public_v2/mean_listings_price_cut_perc/Metro_mean_listings_price_cut_perc_uc_sfr_smoothed_week.csv?t=1625694088') # the percent of sale price cut
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+```{r zip data, include=FALSE}
+### Reading In Zip level data
+sfr_price_history <- read_csv('https://files.zillowstatic.com/research/public_v2/zhvi/Zip_zhvi_uc_sfr_tier_0.33_0.67_sm_sa_mon.csv?t=1625694088')
+
+zillow_forecast <- read_csv('https://files.zillowstatic.com/research/public_v2/zhvf/zhvf_uc_sfrcondo_tier_0.33_0.67_sm_sa_mon.csv?t=1625694088') # zillow smoothed YoY forecast
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+```{r plot, echo=FALSE}
+## Reshaping Data
+tidy_sale <- for_sale %>%
+  gather(key = DateStamp, value = UnitsForSale, 6:ncol(for_sale)) %>%
+  mutate(DateStamp = date(DateStamp)) %>% 
+  
+
+tidy_sale %>%
+  filter(StateName == "CA") %>%
+  ggplot()+
+  geom_point(aes(x = DateStamp, y = UnitsForSale, color = RegionName))
+
+```
+
+
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
